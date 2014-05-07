@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo $DIR
 
-URL="http://build.openbel.org/browse/OR-BR/latest/artifact/JOB1/Namespace-turtle-export/testfile.ttl"
+if [ $# -ne 1 ]; then
+    echo "usage: build.sh [NS URL]" 1>&2
+    exit 1
+fi
 
+URL="$1"
 export JVM_ARGS="-Xmx8g"
 
 echo "downloading from $URL"
-#curl $URL > namespaces.ttl
+curl $URL > namespaces.ttl
 
 echo "stream out model + rdfs inference"
 jena/bin/riot --time --check --strict --stop \
