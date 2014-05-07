@@ -29,3 +29,9 @@ jena/bin/tdbloader --loc=db orthologousMatch.ttl.gz
 
 echo "dumping all"
 jena/bin/tdbdump --loc=db | gzip > namespaces-inferred.nq.gz
+
+echo "clean up"
+rm namespaces.nq.gz
+rm -fr ./db
+rm exactMatch.ttl.gz
+rm orthologousMatch.ttl.gz
