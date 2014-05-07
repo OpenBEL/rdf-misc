@@ -1,0 +1,22 @@
+prefix belv: <http://www.openbel.org/vocabulary/>
+prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+construct {
+    ?s belv:orthologousMatch ?o .
+    ?o belv:orthologousMatch ?s .
+
+    ?subject_eq belv:orthologousMatch ?o .
+    ?o belv:orthologousMatch ?subject_eq .
+
+    ?object_eq belv:orthologousMatch ?s .
+    ?s belv:orthologousMatch ?object_eq .
+
+    ?subject_eq belv:orthologousMatch ?object_eq .
+    ?object_eq belv:orthologousMatch ?subject_eq .
+} where {
+    ?s rdf:type <http://www.openbel.org/vocabulary/NamespaceConcept> .
+    ?o rdf:type <http://www.openbel.org/vocabulary/NamespaceConcept> .
+    ?s belv:orthologousMatch ?o .
+    ?s skos:exactMatch* ?subject_eq .
+    ?o skos:exactMatch* ?object_eq .
+}
