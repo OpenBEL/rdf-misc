@@ -1,20 +1,26 @@
 #!/usr/bin/env bash
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd $DIR
 
-if [ $# -ne 1 ]; then
-    echo "usage: build.sh [NS URL]" 1>&2
+if [ $# -ne 2 ]; then
+    echo "usage: build.sh --file FILE (or --url URL)" 1>&2
     exit 1
 fi
 
-URL="$1"
+MODE="$1"
+LOCATION="$2"
 export JVM_ARGS="-Xmx8g"
 
-echo "downloading from $URL"
-curl $URL > namespaces.ttl
+if [ "$MODE" == "--url" ]; then
+    LOCATION=namespaces.ttl
+
+    echo "downloading from $URL"
+    curl $URL > $LOCATION
+fi
 
 echo "stream out model + rdfs inference"
 jena/bin/riot --time --check --strict --stop \
-              --rdfs=schema.nt namespaces.ttl | gzip > namespaces.nq.gz
+              --rdfs=schema.nt $LOCATION | gzip > namespaces.nq.gz
 
 echo "build TDB"
 jena/bin/tdbloader --loc=db namespaces.nq.gz
@@ -28,7 +34,7 @@ jena/bin/tdbquery --loc=db --query=orthologousMatch.sparql | gzip > orthologousM
 jena/bin/tdbloader --loc=db orthologousMatch.ttl.gz
 
 echo "dumping all"
-jena/bin/tdbdump --loc=db | gzip > namespaces-inferred.nq.gz
+jena/bin/tdbdump --loc=db | bzip2 > namespaces-inferred.nq.bz2
 
 echo "clean up"
 rm namespaces.nq.gz
