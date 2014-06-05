@@ -73,6 +73,7 @@ if options[:new] == 'yes'
   begin
     db.execute('create index literals_text_index on literals(text);')
     db.execute('create index triples_pou_index on triples(predicateUri, objectUri);')
+    db.execute('create index triples_pol_index on triples(predicateUri, objectLiteral);')
     db.execute('create index triples_spou_index on triples(subjectUri, predicateUri, objectUri);')
     db.execute('create index triples_spol_index on triples(subjectUri, predicateUri, objectLiteral);')
   ensure
