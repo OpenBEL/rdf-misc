@@ -1,5 +1,5 @@
-rdf-pipeline
-============
+rdf-misc
+========
 
 Helper scripts to process rdf.
 
