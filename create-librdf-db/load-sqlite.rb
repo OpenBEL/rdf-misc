@@ -2,8 +2,8 @@
 
 require 'optparse'
 require 'redlander'
+require 'sqlite3'
 require 'uri'
-require 'pry'
 
 # defaults
 options = {
@@ -66,27 +66,6 @@ model = Redlander::Model.new(
   storage: 'sqlite',
   synchronous: 'off')
 
-# XXX can we be database agnostic here? DBI module or something?
-if options[:new] == 'yes'
-  require 'sqlite3'
-  db = SQLite3::Database.new options[:name]
-  begin
-    db.execute('create index literals_text_index on literals(text);')
-    db.execute('create index triples_pou_index on triples(predicateUri, objectUri);')
-    db.execute('create index triples_pol_index on triples(predicateUri, objectLiteral);')
-    db.execute('create index triples_spou_index on triples(subjectUri, predicateUri, objectUri);')
-    db.execute('create index triples_spol_index on triples(subjectUri, predicateUri, objectLiteral);')
-  ensure
-    db.close
-  end
-end
-
-model = Redlander::Model.new(
-  new: 'no',
-  name: options[:name],
-  storage: 'sqlite',
-  synchronous: 'off')
-
 if options[:files]
   options[:files].each do |path|
     parser = which_parser(path)
@@ -100,4 +79,38 @@ if options[:files]
     end
   end
 end
+
+# create indexes post insert (if new)
+if options[:new] == 'yes'
+  db = SQLite3::Database.new options[:name]
+
+  begin
+    # create key indexes
+    options[:debug] && $stdout.puts("Creating key indexes on tables, literals and triples.")
+    db.execute('create index literals_text_index on literals(text);')
+    db.execute('create index triples_ol_index on    triples(objectLiteral);')
+    db.execute('create index triples_pou_index on   triples(predicateUri, objectUri);')
+    db.execute('create index triples_pol_index on   triples(predicateUri, objectLiteral);')
+    db.execute('create index triples_spou_index on  triples(subjectUri, predicateUri, objectUri);')
+    db.execute('create index triples_spol_index on  triples(subjectUri, predicateUri, objectLiteral);')
+
+    # create fts4 index
+    options[:debug] && $stdout.puts("Creating 'literals_fts' FTS4 virtual table for 'literals' table; use Porter Stemming algorithm.")
+    db.execute('create virtual table literals_fts USING fts4(id, text, tokenize=porter);')
+  ensure
+    db.close
+  end
+end
+
+db = SQLite3::Database.new options[:name]
+
+begin
+  # refresh data in literals_fts
+  options[:debug] && $stdout.puts("Refreshing 'literals_fts' FTS4 virtual table with data from 'literals' table (delete & insert).")
+  db.execute('delete from literals_fts;')
+  db.execute('insert into literals_fts select id, text from literals;')
+ensure
+  db.close
+end
+
 # vim: ts=2 sw=2
