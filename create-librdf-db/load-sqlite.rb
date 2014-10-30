@@ -66,20 +66,6 @@ model = Redlander::Model.new(
   storage: 'sqlite',
   synchronous: 'off')
 
-if options[:files]
-  options[:files].each do |path|
-    parser = which_parser(path)
-
-    options[:debug] && $stdout.puts("Loading #{path} (parser - #{parser}).")
-    model.transaction_start!
-    begin
-      model.from(URI(path), format: parser)
-    ensure
-      model.transaction_commit!
-    end
-  end
-end
-
 # create indexes post insert (if new)
 if options[:new] == 'yes'
   db = SQLite3::Database.new options[:name]
@@ -99,6 +85,20 @@ if options[:new] == 'yes'
     db.execute('create virtual table literals_fts USING fts4(id, text, tokenize=porter);')
   ensure
     db.close
+  end
+end
+
+if options[:files]
+  options[:files].each do |path|
+    parser = which_parser(path)
+
+    options[:debug] && $stdout.puts("Loading #{path} (parser - #{parser}).")
+    model.transaction_start!
+    begin
+      model.from(URI(path), format: parser)
+    ensure
+      model.transaction_commit!
+    end
   end
 end
 
