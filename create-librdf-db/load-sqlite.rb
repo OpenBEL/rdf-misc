@@ -82,7 +82,7 @@ if options[:new] == 'yes'
 
     # create fts4 index
     options[:debug] && $stdout.puts("Creating 'literals_fts' FTS4 virtual table for 'literals' table; use Porter Stemming algorithm.")
-    db.execute('create virtual table literals_fts USING fts4(id, text, tokenize=porter);')
+    db.execute('create virtual table literals_fts USING fts4(id, uri, scheme_uri, text, tokenize=porter);')
   ensure
     db.close
   end
@@ -108,7 +108,25 @@ begin
   # refresh data in literals_fts
   options[:debug] && $stdout.puts("Refreshing 'literals_fts' FTS4 virtual table with data from 'literals' table (delete & insert).")
   db.execute('delete from literals_fts;')
-  db.execute('insert into literals_fts select id, text from literals;')
+  db.execute("insert into literals_fts
+                select
+                  L.id, U.uri, US.uri, L.text
+                from
+                  literals L, triples T, uris UM, uris U, triples TS, uris UP, uris US
+                where
+                  UM.uri in (
+                    'http://purl.org/dc/terms/identifier',
+                    'http://www.w3.org/2004/02/skos/core#prefLabel',
+                    'http://purl.org/dc/terms/title',
+                    'http://www.w3.org/2004/02/skos/core#altLabel'
+                  ) and
+                  T.predicateUri = UM.id and
+                  T.objectLiteral = L.id and
+                  T.subjectUri = U.id and
+                  T.subjectUri = TS.subjectUri and
+                  TS.predicateUri = UP.id and
+                  UP.uri = 'http://www.w3.org/2004/02/skos/core#inScheme' and
+                  US.id = TS.objectUri;")
 ensure
   db.close
 end
