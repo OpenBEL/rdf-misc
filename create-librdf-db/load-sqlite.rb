@@ -82,7 +82,7 @@ if options[:new] == 'yes'
 
     # create fts4 index
     options[:debug] && $stdout.puts("Creating 'literals_fts' FTS4 virtual table for 'literals' table; use Porter Stemming algorithm.")
-    db.execute('create virtual table literals_fts USING fts4(id, uri, scheme_uri, text, tokenize=porter);')
+    db.execute('create virtual table literals_fts USING fts4(id, uri, scheme_uri, identifier, pref_label, alt_labels, text, tokenize=porter);')
   ensure
     db.close
   end
@@ -110,14 +110,43 @@ begin
   db.execute('delete from literals_fts;')
   db.execute("insert into literals_fts
                 select
-                  L.id, U.uri, US.uri, L.text
+                  L.id,
+                  U.uri,
+                  US.uri,
+                  LI.text,
+                  LPL.text,
+                  (
+                    select
+                      group_concat(LA.text, '|')
+                    from
+                      uris     UA,
+                      triples  TA,
+                      literals LA
+                    where
+                      UA.uri = 'http://www.w3.org/2004/02/skos/core#altLabel' and
+                      TA.subjectUri   = T.subjectUri and
+                      TA.predicateUri = UA.id and
+                      LA.id = TA.objectLiteral
+                  ) as alt_labels,
+                  L.text
                 from
-                  literals L, triples T, uris UM, uris U, triples TS, uris UP, uris US
+                  literals L,
+                  triples T,
+                  uris UM,
+                  uris U,
+                  triples TS,
+                  uris UP,
+                  uris US,
+                  uris UI,
+                  triples TI,
+                  literals LI,
+                  uris UPL,
+                  triples TPL,
+                  literals LPL
                 where
                   UM.uri in (
                     'http://purl.org/dc/terms/identifier',
                     'http://www.w3.org/2004/02/skos/core#prefLabel',
-                    'http://purl.org/dc/terms/title',
                     'http://www.w3.org/2004/02/skos/core#altLabel'
                   ) and
                   T.predicateUri = UM.id and
@@ -126,7 +155,16 @@ begin
                   T.subjectUri = TS.subjectUri and
                   TS.predicateUri = UP.id and
                   UP.uri = 'http://www.w3.org/2004/02/skos/core#inScheme' and
-                  US.id = TS.objectUri;")
+                  US.id = TS.objectUri and
+                  UI.uri = 'http://purl.org/dc/terms/identifier' and
+                  TI.subjectUri = T.subjectUri and
+                  TI.predicateUri = UI.id and
+                  LI.id = TI.objectLiteral and
+                  UPL.uri = 'http://www.w3.org/2004/02/skos/core#prefLabel' and
+                  TPL.subjectUri = T.subjectUri and
+                  TPL.predicateUri = UPL.id and
+                  LPL.id = TPL.objectLiteral;
+             ")
 ensure
   db.close
 end
