@@ -72,17 +72,9 @@ if options[:new] == 'yes'
 
   begin
     # create key indexes
-    options[:debug] && $stdout.puts("Creating key indexes on tables, literals and triples.")
-    db.execute('create index literals_text_index on literals(text);')
-    db.execute('create index triples_ol_index on    triples(objectLiteral);')
-    db.execute('create index triples_pou_index on   triples(predicateUri, objectUri);')
-    db.execute('create index triples_pol_index on   triples(predicateUri, objectLiteral);')
-    db.execute('create index triples_spou_index on  triples(subjectUri, predicateUri, objectUri);')
-    db.execute('create index triples_spol_index on  triples(subjectUri, predicateUri, objectLiteral);')
-
-    # create fts4 index
-    options[:debug] && $stdout.puts("Creating 'literals_fts' FTS4 virtual table for 'literals' table; use Porter Stemming algorithm.")
-    db.execute('create virtual table literals_fts USING fts4(id, uri, scheme_uri, identifier, pref_label, alt_labels, text, tokenize=porter);')
+    options[:debug] && $stdout.puts("[DDL: Execute]")
+    db.execute(File.read('ddl.sql'))
+    options[:debug] && $stdout.puts("[DDL: Complete]")
   ensure
     db.close
   end
@@ -106,65 +98,9 @@ db = SQLite3::Database.new options[:name]
 
 begin
   # refresh data in literals_fts
-  options[:debug] && $stdout.puts("Refreshing 'literals_fts' FTS4 virtual table with data from 'literals' table (delete & insert).")
-  db.execute('delete from literals_fts;')
-  db.execute("insert into literals_fts
-                select
-                  L.id,
-                  U.uri,
-                  US.uri,
-                  LI.text,
-                  LPL.text,
-                  (
-                    select
-                      group_concat(LA.text, '|')
-                    from
-                      uris     UA,
-                      triples  TA,
-                      literals LA
-                    where
-                      UA.uri = 'http://www.w3.org/2004/02/skos/core#altLabel' and
-                      TA.subjectUri   = T.subjectUri and
-                      TA.predicateUri = UA.id and
-                      LA.id = TA.objectLiteral
-                  ) as alt_labels,
-                  L.text
-                from
-                  literals L,
-                  triples T,
-                  uris UM,
-                  uris U,
-                  triples TS,
-                  uris UP,
-                  uris US,
-                  uris UI,
-                  triples TI,
-                  literals LI,
-                  uris UPL,
-                  triples TPL,
-                  literals LPL
-                where
-                  UM.uri in (
-                    'http://purl.org/dc/terms/identifier',
-                    'http://www.w3.org/2004/02/skos/core#prefLabel',
-                    'http://www.w3.org/2004/02/skos/core#altLabel'
-                  ) and
-                  T.predicateUri = UM.id and
-                  T.objectLiteral = L.id and
-                  T.subjectUri = U.id and
-                  T.subjectUri = TS.subjectUri and
-                  TS.predicateUri = UP.id and
-                  UP.uri = 'http://www.w3.org/2004/02/skos/core#inScheme' and
-                  US.id = TS.objectUri and
-                  UI.uri = 'http://purl.org/dc/terms/identifier' and
-                  TI.subjectUri = T.subjectUri and
-                  TI.predicateUri = UI.id and
-                  LI.id = TI.objectLiteral and
-                  UPL.uri = 'http://www.w3.org/2004/02/skos/core#prefLabel' and
-                  TPL.subjectUri = T.subjectUri and
-                  TPL.predicateUri = UPL.id and
-                  LPL.id = TPL.objectLiteral;
-             ")
+  options[:debug] && $stdout.puts("[FTS: Rebuild]")
+  db.execute(File.read('fts.sql'))
+  options[:debug] && $stdout.puts("[FTS: Complete]")
 ensure
   db.close
 end
