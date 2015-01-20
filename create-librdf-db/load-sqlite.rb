@@ -73,7 +73,7 @@ if options[:new] == 'yes'
   begin
     # create key indexes
     options[:debug] && $stdout.puts("[DDL: Execute]")
-    db.execute(File.read('ddl.sql'))
+    db.execute_batch(File.read('ddl.sql'))
     options[:debug] && $stdout.puts("[DDL: Complete]")
   ensure
     db.close
@@ -99,7 +99,7 @@ db = SQLite3::Database.new options[:name]
 begin
   # refresh data in literals_fts
   options[:debug] && $stdout.puts("[FTS: Rebuild]")
-  db.execute(File.read('fts.sql'))
+  db.execute_batch(File.read('fts.sql'))
   options[:debug] && $stdout.puts("[FTS: Complete]")
 ensure
   db.close
