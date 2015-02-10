@@ -1,7 +1,10 @@
 -- create text index for rdf literals
 create index literals_text_index on literals(text);
 
--- create int index for literal of rdf triples
+-- create int index for object uri of rdf triples
+create index triples_ou_index    on triples(objectUri);
+
+-- create int index for object literal of rdf triples
 create index triples_ol_index    on triples(objectLiteral);
 
 -- create int index for [predicate,obj ur] of rdf triples
