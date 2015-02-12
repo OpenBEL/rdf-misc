@@ -1,15 +1,25 @@
-<http://www.openbel.org/vocabulary/AnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
+# ConceptScheme subclasses
 <http://www.openbel.org/vocabulary/AnnotationConceptScheme> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#ConceptScheme> .
+<http://www.openbel.org/vocabulary/NamespaceConceptScheme> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#ConceptScheme> .
+
+# Annotation
+<http://www.openbel.org/vocabulary/AnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://www.openbel.org/vocabulary/AnatomyAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
+<http://www.openbel.org/vocabulary/DiseaseAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
+<http://www.openbel.org/vocabulary/LocationAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
+
+# Namespace
+<http://www.openbel.org/vocabulary/NamespaceConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
 <http://www.openbel.org/vocabulary/AbundanceConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/NamespaceConcept> .
 <http://www.openbel.org/vocabulary/BiologicalProcessConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/NamespaceConcept> .
 <http://www.openbel.org/vocabulary/ComplexConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AbundanceConcept> .
 <http://www.openbel.org/vocabulary/GeneConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AbundanceConcept> .
 <http://www.openbel.org/vocabulary/MicroRNAConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/RNAConcept> .
-<http://www.openbel.org/vocabulary/NamespaceConceptScheme> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#ConceptScheme> .
-<http://www.openbel.org/vocabulary/NamespaceConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://www.openbel.org/vocabulary/PathologyConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/BiologicalProcessConcept> .
 <http://www.openbel.org/vocabulary/ProteinConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AbundanceConcept> .
 <http://www.openbel.org/vocabulary/RNAConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AbundanceConcept> .
-<http://www.openbel.org/vocabulary/PathologyConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/BiologicalProcessConcept> .
+
+# BEL Classes
 <http://www.openbel.org/vocabulary/Abundance> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
 <http://www.openbel.org/vocabulary/Activity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
 <http://www.openbel.org/vocabulary/Evidence> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
@@ -17,6 +27,8 @@
 <http://www.openbel.org/vocabulary/Relationship> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
 <http://www.openbel.org/vocabulary/Statement> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
 <http://www.openbel.org/vocabulary/Term> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+
+# Relationship
 <http://www.openbel.org/vocabulary/Association> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/CorrelativeRelationship> .
 <http://www.openbel.org/vocabulary/BiomarkerFor> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Relationship> .
 <http://www.openbel.org/vocabulary/CausesNoChange> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/CausalRelationship> .
@@ -50,6 +62,8 @@
 <http://www.openbel.org/vocabulary/RateLimitingStepOf> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/CausalRelationship> .
 <http://www.openbel.org/vocabulary/RateLimitingStepOf> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/SubProcessOf> .
 <http://www.openbel.org/vocabulary/SubProcessOf> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/MembershipRelationship> .
+
+# Function
 <http://www.openbel.org/vocabulary/AbundanceActivity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Process> .
 <http://www.openbel.org/vocabulary/BiologicalProcess> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Process> .
 <http://www.openbel.org/vocabulary/CellSecretion> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Translocation> .
@@ -67,6 +81,8 @@
 <http://www.openbel.org/vocabulary/RNAAbundance> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Abundance> .
 <http://www.openbel.org/vocabulary/Transformation> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Process> .
 <http://www.openbel.org/vocabulary/Translocation> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Transformation> .
+
+# Activity
 <http://www.openbel.org/vocabulary/Activity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Activity> .
 <http://www.openbel.org/vocabulary/Catalytic> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Activity> .
 <http://www.openbel.org/vocabulary/Chaperone> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Activity> .
@@ -77,6 +93,8 @@
 <http://www.openbel.org/vocabulary/Ribosylase> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Activity> .
 <http://www.openbel.org/vocabulary/Transcription> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Activity> .
 <http://www.openbel.org/vocabulary/Transport> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Activity> .
+
+# Modification
 <http://www.openbel.org/vocabulary/Acetylation> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Modification> .
 <http://www.openbel.org/vocabulary/Farnesylation> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Modification> .
 <http://www.openbel.org/vocabulary/Glycosylation> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Modification> .
@@ -89,6 +107,8 @@
 <http://www.openbel.org/vocabulary/PhosphorylationSerine> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Phosphorylation> .
 <http://www.openbel.org/vocabulary/PhosphorylationTyrosine> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Phosphorylation> .
 <http://www.openbel.org/vocabulary/PhosphorylationThreonine> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/Phosphorylation> .
+
+# Predicates
 <http://www.openbel.org/vocabulary/hasActivityType> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
 <http://www.openbel.org/vocabulary/hasActivityType> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.openbel.org/vocabulary/Activity> .
 <http://www.openbel.org/vocabulary/hasActivityType> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.openbel.org/vocabulary/Term> .
