@@ -19,6 +19,3 @@ create index triples_spou_index  on triples(subjectUri, predicateUri, objectUri)
 -- create int index for [subject,predicate,obj literal] of rdf triples
 create index triples_spol_index  on triples(subjectUri, predicateUri, objectLiteral);
 
--- create FTS4 virtual table to store SKOS concepts with uri/type/scheme/identifier/pref_label/alt_labels
-create virtual table literals_fts USING fts4(id, uri, scheme_uri, identifier, pref_label, alt_labels, text, tokenize=porter);
-
