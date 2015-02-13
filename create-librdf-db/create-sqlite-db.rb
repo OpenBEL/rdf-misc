@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'pry'
 require 'optparse'
 require 'redlander'
 require 'sqlite3'
@@ -67,6 +66,20 @@ model = Redlander::Model.new(
   name: options[:name],
   storage: 'sqlite',
   synchronous: 'off')
+
+# create indexes before model insert
+if options[:new] == 'yes'
+  db = SQLite3::Database.new options[:name]
+
+  begin
+    # create key indexes
+    options[:debug] && $stdout.puts("[DDL: Execute]")
+    db.execute_batch(File.read('ddl.sql'))
+    options[:debug] && $stdout.puts("[DDL: Complete]")
+  ensure
+    db.close
+  end
+end
 
 if options[:files]
   options[:files].each do |path|
