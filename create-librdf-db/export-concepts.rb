@@ -86,7 +86,7 @@ begin
     i += 1
     if i % 5000 == 0
       output_file.flush
-      puts "#{i} concepts fts-indexed" if options[:debug]
+      puts "#{i} annotation concepts exported" if options[:debug]
     end
   end
 
@@ -99,7 +99,7 @@ begin
     i += 1
     if i % 5000 == 0
       output_file.flush
-      puts "#{i} concepts fts-indexed" if options[:debug]
+      puts "#{i} namespace concepts exported" if options[:debug]
     end
   end
 ensure
