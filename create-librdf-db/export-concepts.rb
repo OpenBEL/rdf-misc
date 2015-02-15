@@ -69,8 +69,8 @@ def map_concepts(rdf_model, concept_type, concept_type_uri)
     :subject => nil,
     :predicate => Redlander::Node.new(RDF_TYPE, :resource => true),
     :object => Redlander::Node.new(concept_type_uri, :resource => true)
-  ).lazy.map { |rdf_s|
-    describe_concept(rdf_s.subject.to_s, concept_type, rdf_model)
+  ).each { |rdf_s|
+    yield describe_concept(rdf_s.subject.to_s, concept_type, rdf_model)
   }
 end
 
@@ -81,7 +81,7 @@ begin
     puts "Mapping concepts to JSON for annotation concepts"
   end
   i = 0
-  map_concepts(rdf_model, :annotation_concept, AN_CONCEPT).each do |concept|
+  map_concepts(rdf_model, :annotation_concept, AN_CONCEPT) do |concept|
     output_file << (MultiJson.dump(concept) + "\n")
     i += 1
     if i % 5000 == 0
@@ -94,7 +94,7 @@ begin
     puts "Mapping concepts to JSON for namespace concepts"
   end
   i = 0
-  map_concepts(rdf_model, :namespace_concept, NS_CONCEPT).each do |concept|
+  map_concepts(rdf_model, :namespace_concept, NS_CONCEPT) do |concept|
     output_file << (MultiJson.dump(concept) + "\n")
     i += 1
     if i % 5000 == 0
