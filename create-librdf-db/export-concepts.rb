@@ -37,7 +37,7 @@ def describe_concept(concept_uri, concept_type, rdf_model)
   concept[:uri] = concept_uri
   concept[:concept_type] = concept_type
   rdf_model.statements.each(
-    :subject => Redlander::Node.new(concept_uri[1...-1], :resource => true),
+    :subject => Redlander::Node.new(concept_uri, :resource => true),
     :predicate => nil,
     :object => nil
   ) do |rdf_s|
@@ -70,7 +70,8 @@ def map_concepts(rdf_model, concept_type, concept_type_uri)
     :predicate => Redlander::Node.new(RDF_TYPE, :resource => true),
     :object => Redlander::Node.new(concept_type_uri, :resource => true)
   ).each { |rdf_s|
-    yield describe_concept(rdf_s.subject.to_s, concept_type, rdf_model)
+    concept_uri = rdf_s.subject.to_s[1...-1]
+    yield describe_concept(concept_uri, concept_type, rdf_model)
   }
 end
 
