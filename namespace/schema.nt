@@ -5,8 +5,11 @@
 # Annotation
 <http://www.openbel.org/vocabulary/AnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
 <http://www.openbel.org/vocabulary/AnatomyAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
+<http://www.openbel.org/vocabulary/CellAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
+<http://www.openbel.org/vocabulary/CellLineAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
 <http://www.openbel.org/vocabulary/DiseaseAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
 <http://www.openbel.org/vocabulary/LocationAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
+<http://www.openbel.org/vocabulary/SpeciesAnnotationConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.openbel.org/vocabulary/AnnotationConcept> .
 
 # Namespace
 <http://www.openbel.org/vocabulary/NamespaceConcept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
