@@ -44,7 +44,7 @@ db.execute('''
   CREATE VIRTUAL TABLE
     concepts_fts
   USING
-    fts4(uri, concept_type, scheme_uri, identifier, pref_label, title, text, tokenize=unicode61 "tokenchars=,-()\'")
+    fts4(uri, concept_type, scheme_uri, identifier, pref_label, title, text, tokenize=unicode61 "tokenchars=,-()\'./[]+")
 ''')
 fts_db_stmt = db.prepare(
   '''insert into
