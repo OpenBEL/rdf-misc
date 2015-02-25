@@ -53,13 +53,9 @@ def describe_concept(concept_uri, concept_type, rdf_model)
 
   # derive :text value
   [ :type, :identifier, :prefLabel, :title, :altLabel ].each do |key|
-    concept[key] = concept[key].join(' ').squeeze(' ').strip()
+    value = concept[key].join(' ').squeeze(' ').strip()
+    concept[key] = value
   end
-  id  = concept[:identifier]
-  lbl = concept[:prefLabel]
-  ttl = concept[:title]
-  alt = concept[:altLabel]
-  concept[:text] = "#{id} #{lbl} #{ttl} #{alt}".squeeze(' ').strip()
 
   concept
 end

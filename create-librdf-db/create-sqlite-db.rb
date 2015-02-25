@@ -9,7 +9,7 @@ require 'multi_json'
 # defaults
 options = {
   new: 'no',
-  name: 'default_db',
+  name: 'rdf.db',
   debug: false
 }
 parser = OptionParser.new do |opts|
@@ -23,7 +23,7 @@ parser = OptionParser.new do |opts|
     end
     (options[:files] ||= []) << path
   end
-  opts.on("-n", "--name NAME", "Storage name     (defaults to 'default_db')") do |name|
+  opts.on("-n", "--name NAME", "Storage name     (defaults to 'rdf.db')") do |name|
     options[:name] = name
   end
   opts.on("-w", "--new", "New storage?     (defaults to 'no')") do

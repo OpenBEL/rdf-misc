@@ -3,6 +3,7 @@
 require 'optparse'
 require 'sqlite3'
 require 'multi_json'
+require_relative 'fts_functions'
 
 # defaults
 options = {
@@ -36,6 +37,15 @@ def symbolize_keys!(hash)
   hash
 end
 
+def concept_text(concept)
+  whole = ""
+  whole.concat(concept[:identifier]).concat(" ")
+  whole.concat(concept[:prefLabel]).concat(" ")
+  whole.concat(concept[:title]).concat(" ")
+  whole.concat(concept[:altLabel])
+  divide_value(whole)
+end
+
 db = SQLite3::Database.new options[:name]
 jf = File.new(options[:input_file], "r")
 db.execute('''PRAGMA journal_mode = OFF''')
@@ -44,26 +54,27 @@ db.execute('''
   CREATE VIRTUAL TABLE
     concepts_fts
   USING
-    fts4(uri, concept_type, scheme_uri, identifier, pref_label, title, text, tokenize=unicode61 "tokenchars=,-()\'./[]+")
+    fts4(uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, text, notindexed=uri, notindexed=concept_type, notindexed=scheme_uri, notindexed=identifier, notindexed=pref_label, notindexed=title, notindexed=alt_labels, tokenize=unicode61 "tokenchars=,-()\'./[]+")
 ''')
 fts_db_stmt = db.prepare(
   '''insert into
-       concepts_fts(uri, concept_type, scheme_uri, identifier, pref_label, title, text)
+       concepts_fts(uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, text)
      values
-       (:uri, :concept_type, :inScheme, :identifier, :prefLabel, :title, :text)'''
+       (:uri, :concept_type, :inScheme, :identifier, :prefLabel, :title, :alt_labels, :text)'''
 )
 begin
   i = 0
   jf.each do |line|
     concept = symbolize_keys!(MultiJson.load(line))
     fts_db_stmt.execute(
-      :uri => concept[:uri],
+      :uri          => concept[:uri],
       :concept_type => concept[:concept_type],
       :inScheme     => concept[:inScheme].first,
       :identifier   => concept[:identifier],
       :prefLabel    => concept[:prefLabel],
       :title        => concept[:title],
-      :text         => concept[:text]
+      :alt_labels   => concept[:altLabel],
+      :text         => concept_text(concept)
     )
 
     i+=1
