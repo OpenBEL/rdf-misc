@@ -37,12 +37,28 @@ def symbolize_keys!(hash)
   hash
 end
 
+def value_s(value)
+  if value.respond_to?(:each)
+    value.join(' ')
+  else
+    value.to_s
+  end
+end
+
 def concept_text(concept)
   whole = ""
-  whole.concat(concept[:identifier]).concat(" ")
-  whole.concat(concept[:prefLabel]).concat(" ")
-  whole.concat(concept[:title]).concat(" ")
-  whole.concat(concept[:altLabel])
+  whole.concat(
+    value_s(concept[:identifier])
+  ).concat(" ")
+  whole.concat(
+    value_s(concept[:prefLabel])
+  ).concat(" ")
+  whole.concat(
+    value_s(concept[:title])
+  ).concat(" ")
+  whole.concat(
+    value_s(concept[:altLabel])
+  )
   divide_value(whole)
 end
 
@@ -54,7 +70,9 @@ db.execute('''
   CREATE VIRTUAL TABLE
     concepts_fts
   USING
-    fts4(uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, text, notindexed=uri, notindexed=concept_type, notindexed=scheme_uri, notindexed=identifier, notindexed=pref_label, notindexed=title, notindexed=alt_labels, tokenize=unicode61 "tokenchars=,-()\'./[]+")
+    fts4(
+      uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, text,
+      notindexed=uri, notindexed=concept_type, notindexed=scheme_uri, tokenize=unicode61 "tokenchars=,-()\'./[]+")
 ''')
 fts_db_stmt = db.prepare(
   '''insert into
@@ -67,14 +85,14 @@ begin
   jf.each do |line|
     concept = symbolize_keys!(MultiJson.load(line))
     fts_db_stmt.execute(
-      :uri          => concept[:uri],
-      :concept_type => concept[:concept_type],
-      :inScheme     => concept[:inScheme].first,
-      :identifier   => concept[:identifier],
-      :prefLabel    => concept[:prefLabel],
-      :title        => concept[:title],
-      :alt_labels   => concept[:altLabel],
-      :text         => concept_text(concept)
+      :uri          => value_s(concept[:uri]),
+      :concept_type => value_s(concept[:concept_type]),
+      :inScheme     => value_s(concept[:inScheme].first),
+      :identifier   => value_s(concept[:identifier]),
+      :prefLabel    => value_s(concept[:prefLabel]),
+      :title        => value_s(concept[:title]),
+      :alt_labels   => value_s(concept[:altLabel]),
+      :text         => value_s(concept_text(concept))
     )
 
     i+=1
