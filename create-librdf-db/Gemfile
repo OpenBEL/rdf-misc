@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'multi_json'
 gem 'oj'
-gem 'redlander'
+gem 'redlander',
+  :github => 'abargnesi/redlander',
+  :branch => 'rubies_support'
 gem 'sqlite3'
 # vim: ts=2 sw=2
