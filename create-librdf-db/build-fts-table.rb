@@ -71,14 +71,14 @@ db.execute('''
     concepts_fts
   USING
     fts4(
-      uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, text,
+      uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, species, text,
       notindexed=uri, notindexed=concept_type, notindexed=scheme_uri, tokenize=unicode61 "tokenchars=,-()\'./[]+")
 ''')
 fts_db_stmt = db.prepare(
   '''insert into
-       concepts_fts(uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, text)
+       concepts_fts(uri, concept_type, scheme_uri, identifier, pref_label, title, alt_labels, species, text)
      values
-       (:uri, :concept_type, :inScheme, :identifier, :prefLabel, :title, :alt_labels, :text)'''
+       (:uri, :concept_type, :inScheme, :identifier, :prefLabel, :title, :alt_labels, :species, :text)'''
 )
 begin
   i = 0
@@ -92,7 +92,8 @@ begin
       :prefLabel    => value_s(concept[:prefLabel]),
       :title        => value_s(concept[:title]),
       :alt_labels   => value_s(concept[:altLabel]),
-      :text         => value_s(concept_text(concept))
+      :species      => value_s(concept[:fromSpecies]),
+      :text         => value_s(concept_text(concept)),
     )
 
     i+=1
